@@ -2,7 +2,7 @@ import PyPlot
 
 function _numerical_gradient_no_batch(f, x)
     h = 1e-4 # 0.0001
-    grad = Array{Float64}(x, length(x))
+    grad = Array{Float64}(undef, size(x))
 
     for idx in 1:length(x)
         tmp_val = x[idx]
@@ -11,7 +11,7 @@ function _numerical_gradient_no_batch(f, x)
 
         x[idx] = tmp_val - h
         fxh2 = f(x) # f(x-h)
-        grad[idx] = (fxh1 - fxh2) / (2*h)
+        grad[idx] = (fxh1 - fxh2) / (2 * h)
 
         x[idx] = tmp_val # 値を元に戻す
     end
@@ -19,16 +19,15 @@ function _numerical_gradient_no_batch(f, x)
     return grad
 end
 
-
 function numerical_gradient(f, X)
 
-    if length(X) == 1
+    if ndims(X) == 1
         return _numerical_gradient_no_batch(f, X)
     else
-        grad = Array{Float64}(X, length(X))
+        grad = Array{Float64}(undef, size(X))
 
-        for (idx, x) in enumerate(X)
-            grad[idx] = _numerical_gradient_no_batch(f, x)
+        for idx in 1:ndims(X)
+            grad[:, idx] = _numerical_gradient_no_batch(f, X[:, idx])
         end
     end
 
@@ -36,11 +35,7 @@ function numerical_gradient(f, X)
 end
 
 function function_2(x)
-    if length(x) == 1
-        return sum(x^2)
-    else
-        return sum(x^2, 2)
-    end
+  return x' * x
 end
 
 function tangent_line(f, x)
@@ -60,3 +55,14 @@ X = collect(Iterators.flatten(X))
 Y = collect(Iterators.flatten(Y))
 
 grad = numerical_gradient(function_2, hcat(X, Y))
+
+PyPlot.figure()
+PyPlot.quiver(X, Y, -grad[:, 1], -grad[:, 2],  angles="xy",color="#666666") #,headwidth=10,scale=40,color="#444444")
+PyPlot.xlim([-2, 2])
+PyPlot.ylim([-2, 2])
+PyPlot.xlabel("x0")
+PyPlot.ylabel("x1")
+PyPlot.grid()
+PyPlot.legend()
+PyPlot.draw()
+PyPlot.show()
