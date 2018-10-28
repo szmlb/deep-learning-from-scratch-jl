@@ -45,24 +45,32 @@ function tangent_line(f, x)
     return (t) -> d * t + y
 end
 
-x0 = collect(-2.0:0.25:2.5)
-x1 = collect(-2.0:0.25:2.5)
+function main()
 
-X = repeat(x0', outer=(length(x1),1))
-Y = repeat(x1,  outer=(1,length(x0)))
+  x0 = collect(-2.0:0.25:2.5)
+  x1 = collect(-2.0:0.25:2.5)
 
-X = collect(Iterators.flatten(X))
-Y = collect(Iterators.flatten(Y))
+  X = repeat(x0', outer=(length(x1),1))
+  Y = repeat(x1,  outer=(1,length(x0)))
 
-grad = numerical_gradient(function_2, hcat(X, Y))
+  X = collect(Iterators.flatten(X))
+  Y = collect(Iterators.flatten(Y))
 
-PyPlot.figure()
-PyPlot.quiver(X, Y, -grad[:, 1], -grad[:, 2],  angles="xy",color="#666666") #,headwidth=10,scale=40,color="#444444")
-PyPlot.xlim([-2, 2])
-PyPlot.ylim([-2, 2])
-PyPlot.xlabel("x0")
-PyPlot.ylabel("x1")
-PyPlot.grid()
-PyPlot.legend()
-PyPlot.draw()
-PyPlot.show()
+  grad = numerical_gradient(function_2, hcat(X, Y))
+
+  PyPlot.figure()
+  PyPlot.quiver(X, Y, -grad[:, 1], -grad[:, 2],  angles="xy",color="#666666") #,headwidth=10,scale=40,color="#444444")
+  PyPlot.xlim([-2, 2])
+  PyPlot.ylim([-2, 2])
+  PyPlot.xlabel("x0")
+  PyPlot.ylabel("x1")
+  PyPlot.grid()
+  PyPlot.legend()
+  PyPlot.draw()
+  PyPlot.show()
+
+end
+
+if occursin(PROGRAM_FILE, @__FILE__)
+    main()
+end
