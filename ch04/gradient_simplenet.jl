@@ -35,7 +35,7 @@ function main()
   net = simpleNet()
 
   f = (w) -> loss(net, x, t) # (f関数名) = (引数名) -> (返り値)
-  dW = numerical_gradient(f, net.W)
+  dW = numerical_gradient_(f, net.W)
 
   print(dW)
 
