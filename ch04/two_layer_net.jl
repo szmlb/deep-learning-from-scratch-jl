@@ -9,13 +9,14 @@ mutable struct TwoLayerNet
 
     function TwoLayerNet(input_size,  hidden_size,  output_size,  weight_init_std)
 
-        rng = MersenneTwister(1234)
+        #rng = MersenneTwister(1234)
+        rng = MersenneTwister()
 
         params = Dict()
         params["W1"] = weight_init_std * randn(rng, Float64,  (hidden_size,  input_size))
-        params["b1"] = zeros(Float64, hidden_size)
+        params["b1"] = zeros(Float64, (hidden_size, 1))
         params["W2"] = weight_init_std * randn(rng, Float64,  (output_size,  hidden_size))
-        params["b2"] = zeros(Float64, output_size)
+        params["b2"] = zeros(Float64, (output_size, 1))
 
         new(params)
 
@@ -28,9 +29,9 @@ function predict(self::TwoLayerNet, x)
     W1, W2 = self.params["W1"], self.params["W2"]
     b1, b2 = self.params["b1"], self.params["b2"]
 
-    a1 = W1 * x + b1
+    a1 = W1 * x .+ b1
     z1 = sigmoid(a1)
-    a2 = W2 * z1 + b2
+    a2 = W2 * z1 .+ b2
     y = softmax(a2)
 
     return y
@@ -112,11 +113,16 @@ end
 
 function main()
 
-  input_size = 2
-  hidden_size = 2
-  output_size = 3
+  input_size = 784
+  hidden_size = 50
+  output_size = 10
   weight_init_std = 0.01
   net = TwoLayerNet(input_size,  hidden_size,  output_size,  weight_init_std)
+
+  x = zeros(Float64, (input_size, 1))
+  t = zeros(Int, (output_size, 1))
+
+  grad = numerical_gradient(net, x, t)
 
 end
 

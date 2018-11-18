@@ -8,7 +8,8 @@ mutable struct simpleNet
     W::Array{Float64}
 
     function simpleNet()
-        rng = MersenneTwister(1234)
+        #rng = MersenneTwister(1234)
+        rng = MersenneTwister()
         W = randn(rng, Float64,  (3,  2))
         new(W)
     end
@@ -29,8 +30,17 @@ end
 
 function main()
 
-  x = [0.6, 0.9]
-  t = [0, 0, 1]
+  x = zeros(Float64, (2, 1))
+  x[1, 1] = 0.6
+  x[2, 1] = 0.9
+
+  t = zeros(Int, (3, 1))
+  t[1, 1] = 0
+  t[2, 1] = 0
+  t[3, 1] = 1
+
+  #x = [0.6, 0.9]
+  #t = [0, 0, 1]
 
   net = simpleNet()
 
