@@ -57,8 +57,8 @@ function main()
         #println(t_batch)
 
         # 勾配の計算
-        grad = numerical_gradient(network, x_batch, t_batch)
-        #grad = network.gradient(x_batch, t_batch)
+        #grad = numerical_gradient(network, x_batch, t_batch) # slow
+        grad = gradient(network, x_batch, t_batch) # fast
 
         # パラメータの更新
         for key in ["W1", "b1", "W2", "b2"]
